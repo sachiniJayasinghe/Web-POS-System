@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickTill POS</title>
+<link rel="stylesheet" href="styles/styles.css">
+<link rel="stylesheet" href="styles/booststrap.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+ <style>
+.table>:not(caption)>*>* {
+    padding: 0.5rem 0.5rem;
+    color: var(--bs-table-color-state,var(--bs-table-color-type,var(--bs-table-color)));
+    background-color: #e1cbeb;
+    border-bottom-width: var(--bs-border-width);
+    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg)));
+}
+.card {
+     height: 180px;
+    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.03);
+    border-radius: 30px;
+    padding: 20px;
+    border: 2px solid #b200ff;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.card i {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    color: var(--font-grey);
+    font-size: 60px;
+    /*animation: colorChange 6.5s infinite alternate;*/  /*add animation*/
+}
+.card h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.card p {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #666;
+}
+.link-page{
+    text-decoration: none;
+    color: var(--accent-color);
+    cursor: pointer;
+}
+.bordered{
+  height: 100vh;
+}
+.table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+        #order {
+  padding: 20px 0;
+}
+
+#order {
+  padding: 20px 0;
+}
+
+#order .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  color: #333;
+}
+
+.order_container {
+  margin-bottom: 30px;
+  border: 1px solid #ccc; /* Add border */
+  padding: 15px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+}
+
+.container h4 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.table thead th {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.text-end {
+  text-align: end;
+}
+
+.net_total,
+.sub_total {
+  margin-top: 20px;
+}
+.cart_btn{
+  background-color: #c205db;
+  color: #fff;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.order_btn {
+  background-color: #c205db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .col-lg-6 {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .header {
+    font-size: 1.5rem;
+  }
+}
+
+
+ </style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div id="logo">
+    <img src="logo.png" alt="Logo">
+    <h1>QuickTill</h1>
+  </div>
+  <div class="menu">
+    <div class="menu-item active">Home</div>
+    <div class="menu-item">Customers</div>
+    <div class="menu-item">Items</div>
+    <div class="menu-item">Orders</div>
+    <div class="menu-item">Report and Analytics</div>
+    <div class="menu-item">Settings</div>
+  </div>
+  <div class="menu-item mt-auto">Log Out</div>
+</div>
+
+<div id="main-content">
+
+  <!-- Home View -->
+  <div id="home-view" class="view active">
+    <div class="grid-container">
+      <div class="card">
+          <h3>Customers</h3>
+          <p>125</p>
+          <i class="fa-solid fa-user fa-2xl"></i>
+          <a id="link-page" href="customers-view">>> Manage Customer<<</a>
+
+        </div>
+      <div class="card">
+          <h3>Items</h3>
+          <p>220</p>
+          <i class="fa-solid fa-layer-group fa-2xl"></i>
+          <a id="link-page" href="items-view">>> Manage Items<<</a>
+
+
+      </div>
+      <div class="card">
+          <h3>Orders</h3>
+          <p>59</p>
+          <i class="fa-solid fa-cart-shopping fa-2xl"></i>
+          <a id="link-page" href="oders-view">>> Manage Oders<<</a>
+
+      </div>
+      <!-- Add more cards as needed -->
+  </div>
+  </div>
+
+  <!-- Customers View -->
+  <div class="view" id="customers-view">
+    <div class="row">
+      <!-- Customer Form -->
+      <div class="col-md-6 bordered">
+        <h2>Customer Form</h2>
+        <div class="form-container">
+          <div class="form-details">
+            <label for="customer-id">Customer ID</label>
+            <input id="cIdTxt" type="text" class="form-control">
+          </div>
+          
+          <div class="form-details">
+            <label for="name">Name</label>
+            <input id="cNameTxt" type="text" class="form-control">
+          </div>
+          
+          <div class="form-details">
+            <label for="contact-no">Contact No</label>
+            <input id="cNoTxt" type="text" class="form-control">
+          </div>
+          
+          <div class="form-details">
+            <label for="address">Address</label>
+            <input id="cAddressTxt" type="text" class="form-control">
+          </div>
+          
+          <div class="customer-btns mt-3">
+            <button id="cSavebtn" type="button" class="btn btn-primary">Save</button>
+            <button id="ceditBtn" type="button" class="btn btn-success">Update</button>
+            <button id="cdeleteBtn" type="button" class="btn btn-danger">Delete</button>
+            <button id="cClearbtn" type="button" class="btn btn-secondary">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Table -->
+      <div class="col-md-6 bordered">
+        <h2>Customer List</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Customer ID</th>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Address</th>
+              </tr>
+            </thead>
+            <tbody id="tblCustomer">         
+                   <!-- Customer rows will be appended here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+ <!-- items View -->
+ <div class="view" id="items-view">
+  <div class="row">
+    <!-- Customer Form -->
+    <div class="col-md-6 bordered">
+      <h2>Item Form</h2>
+      <div class="form-container">
+        <div class="form-details">
+          <label for="customer-id">Item Code</label>
+          <input id="iCode" type="text" class="form-control">
+        </div>
+        
+        <div class="form-details">
+          <label for="name"> Item Name</label>
+          <input id="iNameTxt" type="text" class="form-control">
+        </div>
+        
+        <div class="form-details">
+          <label for="contact-no">Price</label>
+          <input id="iPrice" type="text" class="form-control">
+        </div>
+        
+        <div class="form-details">
+          <label for="address">QTY</label>
+          <input id="iQTY" type="text" class="form-control">
+        </div>
+        
+        <div class="customer-btns mt-3">
+          <button id="iSavebtn" type="button" class="btn btn-primary">Save</button>
+          <button id="ieditbtn" type="button" class="btn btn-success">Update</button>
+          <button id="ideletebtn" type="button" class="btn btn-danger">Delete</button>
+          <button type="iClearbtn" class="btn btn-secondary">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Table -->
+    <div class="col-md-6 bordered">
+      <h2>Items List</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Item Code</th>
+              <th scope="col">Item Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">QTY</th>
+            </tr>
+          </thead>
+          <tbody id="tblItems">         
+                 <!-- Customer rows will be appended here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+   
+  <!-- Orders View -->
+  <div class="view" id="orders-view">
+    <div class="row">
+      <!-- Customer Form -->
+      <div class="col-md-6 bordered">
+        <h2>Oders Form</h2>
+        <div class="form-container">
+          <div class="form-details">
+            <label for="customer-id">Oder ID</label>
+            <input id="oIdTxt" type="text" class="form-control">
+          </div>
+          
+          <div class="form-details">
+            <label for="name">Customer Id</label>
+            <input id="cIdTxt" type="text" class="form-control">
+          </div>
+          
+          <div class="form-details">
+            <label for="contact-no">Date</label>
+            <input id="date" type="date" class="form-control">
+          </div>
+          
+          <div class="form-details">
+            <label for="address">Total</label>
+            <input id="total" type="text" class="form-control">
+          </div>
+          
+        
+        </div>
+      </div>
+
+      <!-- Customer Table -->
+      <div class="col-md-6 bordered">
+        <h2>Oder List</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Oder ID</th>
+                <th scope="col">Customer Id</th>
+                <th scope="col">Date</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody id="tblItems">         
+                   <!-- Customer rows will be appended here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Report and Analytics View -->
+  <div id="report-and-analytics-view" class="view">
+    <section id="order">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col">
+            <h3 class="header">Place Order</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="order_container mt-3">
+              <div class="container">
+                <h4>Invoice Details</h4>                    <!--Invoice Details-->
+                <div class="row">
+                  <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div>
+                      <label for="order_Id" class="form-label">Order ID</label>
+                      <input type="text" class="form-control" id="order_Id">
+                    </div>
+                    <div>
+                      <label for="custId" class="form-label">Customer Id</label>
+                      <select class="form-select" aria-label="Default select example" id="custId">
+                        <option selected>select the customer</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div>
+                      <label for="orderDate" class="form-label">Date</label>
+                      <input type="date" class="form-control" id="orderDate">
+                    </div>
+                    <div>
+                      <label for="custName" class="form-label">Customer name</label>
+                      <input type="text" class="form-control" id="custName">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="order_container mt-3">
+              <div class="container">
+                <h4>Item Select</h4>            <!--Item Select-->
+                <div class="row">
+                  <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div>
+                      <label for="item_Id" class="form-label">Item Id</label>
+                      <select class="form-select" aria-label="Default select example" id="item_Id">
+                        <option selected>select the item</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="qtyOnHand" class="form-label">Qty On Hand</label>
+                      <input type="number" class="form-control" id="qtyOnHand" disabled>
+                    </div>
+                    <div>
+                      <label for="order_quantity" class="form-label">Order Qty</label>
+                      <input type="number" class="form-control" id="order_quantity" min="0">
+                    </div>
+                  </div>
+                  <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div>
+                      <label for="desc" class="form-label">Item Description</label>
+                      <input type="text" class="form-control" id="desc" disabled>
+                    </div>
+                    <div>
+                      <label for="unit_price" class="form-label">Unit Price</label>
+                      <input type="number" class="form-control" id="unit_price" disabled>
+                    </div>
+                    <div class="text-end">
+                      <button class="cart_btn"><i class="fa-solid fa-plus fa-lg m-2"></i>Add to Cart</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="order_container mt-3">
+              <div class="container">
+                <h4>Cart</h4>                <!-- Cart -->
+                <table class="table table-hover">
+                  <thead>
+                  <tr>
+                    <th scope="col">Item Id</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Remove</th>
+                  </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+    
+            <div class="order_container mt-3">
+              <div class="container">
+                <div class="row">
+                  <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div>
+                      <label for="cash" class="form-label">Cash</label>
+                      <input type="number" class="form-control" id="cash">
+                    </div>
+                    <div>
+                      <label for="balance" class="form-label">Balance</label>
+                      <input type="number" class="form-control" id="balance">
+                    </div>
+                  </div>
+                  <div class="col col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div>
+                      <label for="discount" class="form-label">Discount</label>
+                      <input type="number" class="form-control" id="discount" max="100" min="0">
+                    </div>
+                    <div class="net_total">
+                      <span>Net Total : </span>
+                      <span>0/=</span>
+                    </div>
+                    <div class="sub_total">
+                      <span>Sub Total : </span>
+                      <span>0/=</span>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center mt-3 d-flex">
+                    <button class="order_btn"><i class="fa-solid fa-cart-shopping fa-lg m-3"></i>Place Order</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <!-- Settings View -->
+  <div id="settings-view" class="view">
+    <h2>Settings</h2>
+    <p>Settings content goes here...</p>
+  </div>
+
+</div>
+
+
+<script src="controller/script.js"></script>
+<script src="controller/CustomerController.js"></script>
+<script src="controller/ItemsController.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+    crossorigin="anonymous"></script>
+</body>
+</html>
