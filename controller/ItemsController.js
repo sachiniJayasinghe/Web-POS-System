@@ -75,15 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   
     }
-
-    clearButton.click(() => {
-      $iCode.val("");
-      $iNameTxt.val("");
-      $iPrice.val("");
-      $iQTY.val("");
-      console.log('Form cleared');
-  });
-
   $("#ideletebtn").click(() => {
     const iIdValue = $iCode.val();
 
