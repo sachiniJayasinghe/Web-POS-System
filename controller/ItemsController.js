@@ -1,56 +1,100 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const iCode = document.getElementById('iCode');
-    const iNameTxt = document.getElementById('iNameTxt');
-    const iPrice = document.getElementById('iPrice');
-    const iQTY = document.getElementById('iQTY');
-    const tblItems = document.getElementById('tblItems');
 
-    document.getElementById('iSavebtn').addEventListener('click', () => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${iCode.value}</td>
-        <td>${iNameTxt.value}</td>
-        <td>${iPrice.value}</td>
-        <td>${iQTY.value}</td>
-      `;
-      row.addEventListener('click', () => {
-        iCode.value = row.cells[0].innerText;
-        iNameTxt.value = row.cells[1].innerText;
-        iPrice.value = row.cells[2].innerText;
-        iQTY.value = row.cells[3].innerText;
-        tblItems.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
-        row.classList.add('selected');
-      });
-      tblItems.appendChild(row);
-      clearForm();
-    });
+  const saveButton = $("#iSavebtn");
+  const updateButton = $('#ieditbtn');
+  const deleteButton = $('#ideletebtn');
+  const clearButton = $('#iClearbtn');
+  const itemTable = $('#tblItems');
 
-    document.getElementById('ieditbtn').addEventListener('click', () => {
-      const selectedRow = tblItems.querySelector('tr.selected');
-      if (selectedRow) {
-        selectedRow.cells[0].innerText = iCode.value;
-        selectedRow.cells[1].innerText = iNameTxt.value;
-        selectedRow.cells[2].innerText = iPrice.value;
-        selectedRow.cells[3].innerText = iQTY.value;
-        clearForm();
-      }
-    });
+  var $tblItems = $("#tblItems");
+  var $iCode = $("#iCode");
+  var $iNameTxt = $("#iNameTxt");
+  var $iPrice = $("#iPrice");
+  var $iQTY = $("#iQTY");
 
-    document.getElementById('ideletebtn').addEventListener('click', () => {
-      const selectedRow = tblItems.querySelector('tr.selected');
-      if (selectedRow) {
-        tblItems.removeChild(selectedRow);
-        clearForm();
-      }
-    });
+  var items =[];
 
-    document.getElementById('iClearbtn').addEventListener('click', clearForm);
 
-    function clearForm() {
-      iCode.value = '';
-      iNameTxt.value = '';
-      iPrice.value = '';
-      iQTY.value = '';
-      tblItems.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
-    }
+  // Assuming `items` is an array to store item objects
+
+  $("#iSavebtn").click(() => {
+      let newItem = {
+          code: $iCode.val(),
+          name: $iNameTxt.val(),
+          price: $iPrice.val(),
+          qty: $iQTY.val()
+      };
+      items.push(newItem);
+      console.log(items);
+      updateItemTable();
   });
+
+  $("#ieditbtn").click(() => {
+      const iIdValue = $iCode.val();
+      const iNameValue = $iNameTxt.val();
+      const iPriceValue = $iPrice.val();
+      const iQtyValue = $iQTY.val();
+
+      for (let i = 0; i < items.length; i++) {
+          if (items[i].code === iIdValue) {
+              items[i] = {
+                  code: iIdValue,
+                  name: iNameValue,
+                  price: iPriceValue,
+                  qty: iQtyValue,
+              };
+              break;
+          }
+      }
+
+      updateItemTable();
+  });
+
+  function updateItemTable() {
+      $tblItems.empty();
+
+      items.forEach((item) => {
+          $tblItems.append(`<tr>
+          <td>${item.code}</td>
+          <td>${item.name}</td>
+          <td>${item.price}</td>
+          <td>${item.qty}</td></tr>`);
+      });
+
+      $tblItems.find("tr").click(function () {
+          const row = $(this);
+          const code = row.find("td:eq(0)").text();
+          const name = row.find("td:eq(1)").text();
+          const price = row.find("td:eq(2)").text();
+          const qty = row.find("td:eq(3)").text();
+
+          $iCode.val(code);
+          $iNameTxt.val(name);
+          $iPrice.val(price);
+          $iQTY.val(qty);
+      });
+  
+    }
+
+    clearButton.click(() => {
+      $iCode.val("");
+      $iNameTxt.val("");
+      $iPrice.val("");
+      $iQTY.val("");
+      console.log('Form cleared');
+  });
+
+  $("#ideletebtn").click(() => {
+    const iIdValue = $iCode.val();
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].code === iIdValue) {
+            items.splice(i, 1);
+            updateItemTable();
+            break;
+        }
+    }
+  
+});
+
+});

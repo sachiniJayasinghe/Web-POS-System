@@ -1,94 +1,94 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const saveButton = document.getElementById('cSavebtn');
-  const updateButton = document.getElementById('ceditBtn');
-  const deleteButton = document.getElementById('cdeleteBtn');
-  const clearButton = document.getElementById('cClearbtn');
-  const customerTable = document.getElementById('tblCustomer');
-  let editingRow = null;
+  const saveButton = $("#cSavebtn")
+  const updateButton =$('#ceditBtn');
+  const deleteButton = $('#cdeleteBtn');
+  const clearButton = $('#cClearbtn');
+  const customerTable = $('#tblCustomer');
 
-  saveButton.addEventListener('click', () => {
-      const customerId = document.getElementById('cIdTxt').value;
-      const customerName = document.getElementById('cNameTxt').value;
-      const contactNo = document.getElementById('cNoTxt').value;
-      const address = document.getElementById('cAddressTxt').value;
+    var $tblCustomer = $("#tblCustomer");
+    var $cIdTxt = $("#cIdTxt");
+    var $cNameTxt = $("#cNameTxt");
+    var $cNOText = $("#cNoTxt");
+    var $cAddressTxt = $("#cAddressTxt");
 
-      if (customerId && customerName && contactNo && address) {
-          if (editingRow) {
-              editingRow.cells[0].innerText = customerId;
-              editingRow.cells[1].innerText = customerName;
-              editingRow.cells[2].innerText = contactNo;
-              editingRow.cells[3].innerText = address;
-              editingRow = null;
-          } else {
-              const newRow = document.createElement('tr');
-              newRow.innerHTML = `
-                  <td>${customerId}</td>
-                  <td>${customerName}</td>
-                  <td>${contactNo}</td>
-                  <td>${address}</td>
-              `;
-              customerTable.appendChild(newRow);
-          }
+                                                                            
+    $("#cSavebtn").click(() => {
 
-          // Clear the form inputs after saving
-          clearForm();
-      } else {
-          alert('Please fill in all fields');
-      }
-  });
+    console.log("Lahiru");
+    let newCustomer = Object.assign({},customer);
+    newCustomer.id = $cIdTxt.val();
+    newCustomer.name = $cNameTxt.val();
+    newCustomer.number = $cNOText.val();
+    newCustomer.address = $cAddressTxt.val();
+    customers.push(newCustomer);
+    console.log(customers);
+    updateCustomerTable();
 
-  updateButton.addEventListener('click', () => {
-      if (editingRow) {
-          const customerId = document.getElementById('cIdTxt').value;
-          const customerName = document.getElementById('cNameTxt').value;
-          const contactNo = document.getElementById('cNoTxt').value;
-          const address = document.getElementById('cAddressTxt').value;
 
-          if (customerId && customerName && contactNo && address) {
-              editingRow.cells[0].innerText = customerId;
-              editingRow.cells[1].innerText = customerName;
-              editingRow.cells[2].innerText = contactNo;
-              editingRow.cells[3].innerText = address;
-              editingRow = null;
-              clearForm();
-          } else {
-              alert('Please fill in all fields');
-          }
-      } else {
-          alert('Please select a row to update');
-      }
-  });
-
-  deleteButton.addEventListener('click', () => {
-      if (editingRow) {
-          customerTable.removeChild(editingRow);
-          editingRow = null;
-          clearForm();
-      } else {
-          alert('Please select a row to delete');
-      }
-  });
-
-  clearButton.addEventListener('click', () => {
-      clearForm();
-  });
-
-  customerTable.addEventListener('click', (event) => {
-      const row = event.target.closest('tr');
-      if (row) {
-          editingRow = row;
-          document.getElementById('cIdTxt').value = row.cells[0].innerText;
-          document.getElementById('cNameTxt').value = row.cells[1].innerText;
-          document.getElementById('cNoTxt').value = row.cells[2].innerText;
-          document.getElementById('cAddressTxt').value = row.cells[3].innerText;
-      }
-  });
-
-  function clearForm() {
-      document.getElementById('cIdTxt').value = '';
-      document.getElementById('cNameTxt').value = '';
-      document.getElementById('cNoTxt').value = '';
-      document.getElementById('cAddressTxt').value = '';
-      editingRow = null;
-  }
 });
+
+$("#ceditBtn").click(() => {
+    const cIdValue = $cIdTxt.val();
+    const cNameValue = $cNameTxt.val();
+    const cNumberValue = $cNOText.val();
+    const cAddressValue = $cAddressTxt.val();
+
+    for (let i = 0; i < customers.length; i++) {
+        if (customers[i].id === cIdValue) {
+            customers[i] = {
+                id: cIdValue,
+                name: cNameValue,
+                number: cNumberValue,
+                address: cAddressValue,
+            };
+            break;
+        }
+    }
+
+    updateCustomerTable();
+});
+
+function updateCustomerTable() {
+    $tblCustomer.empty();
+
+    customers.forEach((customer) => {
+        $tblCustomer.append(`<tr>
+        <td>${customer.id}</td>
+        <td>${customer.name}</td>
+        <td>${customer.number}</td>
+        <td>${customer.address}</td></tr>`);
+    });
+
+    $tblCustomer.find("tr").click(function () {
+        const row = $(this);
+        const name = row.find("td:eq(0)").text();
+        const id = row.find("td:eq(1)").text();
+        const number = row.find("td:eq(2)").text();
+        const address = row.find("td:eq(3)").text();
+
+        $cNameTxt.val(name);o
+        $cIdTxt.val(id);
+        $cNOText.val(number);
+        $cAddressTxt.val(address);
+    });
+}
+    $("#cClearbtn").click(() => {
+        $cNameTxt.val("");
+        $cIdTxt.val("");
+        $cNOText.val("");
+        $cAddressTxt.val("");
+    });
+
+    $("#cdeleteBtn").click(() => {
+        const cIdValue = $cIdTxt.val();
+    
+        for (let i = 0; i < customers.length; i++) {
+            if (customers[i].id === cIdValue) {
+                customers.splice(i, 1);
+                updateCustomerTable();
+                break;
+            }
+        }
+    });
+
+  });
