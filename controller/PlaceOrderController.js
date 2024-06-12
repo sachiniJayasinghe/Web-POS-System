@@ -1,71 +1,61 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // Initialize order form
-    initOrderForm();
-
-    // Event listeners
-    document.getElementById("item_Id").addEventListener("change", onItemSelect);
-    document.querySelector(".cart_btn").addEventListener("click", addToCart);
-    document.querySelector(".order_btn").addEventListener("click", placeOrder);
-});
-
-function initOrderForm() {
-    // Populate customer dropdown
-    populateCustomers();
-    // Populate item dropdown
-    populateItems();
-}
 
 function populateCustomers() {
-    const customerDropdown = document.getElementById("custId");
-    // Fetch customers from an API or database
-    // Assuming a sample response
+    const selectElement = $("#custId");
+    selectElement.children().remove();
+
     for (let i = 0; i < customers.length; i++) {
         const option = $("<option></option>");
         option.val(customers[i].id);
         option.text(customers[i].id);
         selectElement.append(option);
     }
-    customers.forEach(customer => {
-        const option = document.createElement("option");
-        option.value = customer.id;
-        option.textContent = customer.name;
-        customerDropdown.appendChild(option);
-    });
+    
+    
+
 }
 
 function populateItems() {
-    const itemDropdown = document.getElementById("item_Id");
-    // Fetch items from an API or database
-    // Assuming a sample response
-    const items = [
-        { id: "I001", name: "Item 1", description: "Item 1 description", price: 10, qty: 100 },
-        { id: "I002", name: "Item 2", description: "Item 2 description", price: 20, qty: 200 }
-    ];
-    items.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.id;
-        option.textContent = item.name;
-        option.dataset.price = item.price;
-        option.dataset.qty = item.qty;
-        option.dataset.description = item.description;
-        itemDropdown.appendChild(option);
-    });
+    const selectItem = $("#item_Id");
+    selectItem.children().remove();
+    
+    for (let i = 0; i < items.length; i++) {
+        const option = $("<option></option>");
+        option.val(items[i].id);
+        option.text(items[i].id);
+        option.data("price", items[i].price);
+        option.data("qty", items[i].qty);
+        option.data("description", items[i].description);
+        selectItem.append(option);
+    }
 }
 
+$("#custId").change(function () {
+    console.log("hai");
+    const selectedValue = $(this).val();
+    for (let i = 0; i < customers.length; i++) {
+        if (selectedValue === customers[i].id) {
+            $("#custName").val(customers[i].name);
+            console.log("customer", customers[i]);
+        }
+    }
+});
+
+$("#item_Id").change(onItemSelect);
+
 function onItemSelect(event) {
-    const selectedItem = event.target.selectedOptions[0];
-    document.getElementById("unit_price").value = selectedItem.dataset.price;
-    document.getElementById("qtyOnHand").value = selectedItem.dataset.qty;
-    document.getElementById("desc").value = selectedItem.dataset.description;
+    const selectedItem = $(event.target).find(":selected");
+    $("#unit_price").val(selectedItem.data("price"));
+    $("#qtyOnHand").val(selectedItem.data("qty"));
+    $("#desc").val(selectedItem.data("description"));
 }
 
 function addToCart() {
     const itemDropdown = document.getElementById("item_Id");
-    const selectedItem = itemDropdown.selectedOptions[0];
-    const itemId = selectedItem.value;
-    const unitPrice = selectedItem.dataset.price;
-    const qtyOnHand = selectedItem.dataset.qty;
-    const orderQty = document.getElementById("order_quantity").value;
+    const selectedItem = $(itemDropdown).find(":selected");
+    const itemId = selectedItem.val();
+    const unitPrice = parseFloat(selectedItem.data("price"));
+    const qtyOnHand = parseInt(selectedItem.data("qty"));
+    const orderQty = parseInt(document.getElementById("order_quantity").value);
 
     if (orderQty > 0 && orderQty <= qtyOnHand) {
         const cartTable = document.querySelector(".order_container tbody");
@@ -73,15 +63,16 @@ function addToCart() {
 
         row.innerHTML = `
             <td>${itemId}</td>
-            <td>${unitPrice}</td>
+            <td>${unitPrice.toFixed(2)}</td>
             <td>${orderQty}</td>
-            <td>${unitPrice * orderQty}</td>
+            <td>${(unitPrice * orderQty).toFixed(2)}</td>
             <td><button class="remove-btn">Remove</button></td>
         `;
         cartTable.appendChild(row);
 
         row.querySelector(".remove-btn").addEventListener("click", function () {
             row.remove();
+            updateTotals();
         });
 
         updateTotals();
@@ -107,8 +98,8 @@ function placeOrder() {
     const orderId = document.getElementById("order_Id").value;
     const customerId = document.getElementById("custId").value;
     const orderDate = document.getElementById("orderDate").value;
-    const cash = document.getElementById("cash").value;
-    const discount = document.getElementById("discount").value;
+    const cash = parseFloat(document.getElementById("cash").value);
+    const discount = parseFloat(document.getElementById("discount").value);
     const subTotal = parseFloat(document.querySelector(".sub_total span:nth-child(2)").textContent);
     const netTotal = subTotal - (subTotal * (discount / 100));
 

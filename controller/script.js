@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Get the target view ID from the menu item text or data attribute
           const targetView = this.innerText.toLowerCase().replace(/ /g, '-') + '-view';
           switchView(targetView);
+          populateCustomers();
       });
   });
 
